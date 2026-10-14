@@ -3,10 +3,10 @@
 A simple Game Engine made on C++
 
 ### Planned things: 
-- [] App framework
-- [] Graphics/Rendering
-- [] Gui Editor
-- [] Lua scripting
+- [ ] App framework
+- [ ] Graphics/Rendering
+- [ ] Gui Editor
+- [ ] Lua scripting
 
 ### Notice
 This project is NOT vibe-coded and it wasn't made by the help of any AI,
