@@ -1,0 +1,4 @@
+The project has this libraries by this amazing people:
+
+- spdlog: gabime
+- glfw: GLFW development team
