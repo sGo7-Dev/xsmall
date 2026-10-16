@@ -13,14 +13,11 @@
 \-------------------------------------------------------------------/
 */
 
+#include "math/math_utils.h"
 #include <cmath>
-#include <concepts>
 
 namespace xsmall {
 namespace math {
-
-template <typename T>
-concept Decimal = std::same_as<T, float> || std::same_as<T, double>;
 
 template <Decimal T> struct vec2 {
     T x = T{0};
@@ -52,6 +49,12 @@ template <Decimal T> struct vec2 {
     constexpr vec2<T> direction_to(const vec2<T> &to) const;
     constexpr T distance_to(const vec2<T> &to) const;
     constexpr T distance_squared_to(const vec2<T> &to) const;
+    constexpr vec2<T> perpendicular() const;
+    constexpr vec2<T> reflect(const vec2<T> &line) const;
+    constexpr vec2<T> bounce(const vec2<T> &line) const;
+    constexpr vec2<T> project(const vec2<T> &to) const;
+    constexpr bool is_zero_approx() const;
+    constexpr bool is_equal_approx(const vec2<T> &to) const;
 
     constexpr vec2<T> operator-(const vec2<T> &other) const {
         return vec2(x - other.x, y - other.y);
@@ -79,6 +82,14 @@ template <Decimal T> struct vec2 {
 
     constexpr vec2<T> operator*(T scalar) const {
         return vec2(x * scalar, y * scalar);
+    }
+
+    friend constexpr vec2<T> operator*(T scalar, const vec2<T> &v) {
+        return v * scalar;
+    }
+
+    friend constexpr vec2<T> operator/(T scalar, const vec2<T> &v) {
+        return v / scalar;
     }
 
     constexpr vec2<T> operator/(T scalar) const {
@@ -114,19 +125,28 @@ template <Decimal T> struct vec2 {
         x /= scalar;
         y /= scalar;
     }
+
+    constexpr bool operator==(const vec2<T> &other) {
+        return x == other.x && y == other.y;
+    }
+
+    constexpr bool operator!=(const vec2<T> &other) {
+        return x != other.x && y != other.y;
+    }
+
+    constexpr bool operator<(const vec2<T> &other) const {
+        return x == other.x ? (y < other.y) : (x < other.x);
+    }
+    constexpr bool operator>(const vec2<T> &other) const {
+        return x == other.x ? (y > other.y) : (x > other.x);
+    }
+    constexpr bool operator<=(const vec2<T> &other) const {
+        return x == other.x ? (y <= other.y) : (x < other.x);
+    }
+    constexpr bool operator>=(const vec2<T> &other) const {
+        return x == other.x ? (y >= other.y) : (x > other.x);
+    }
 };
-
-template <Decimal T> static constexpr T clamp_util(const T value, const T min, const T max) {
-    return value < min ? min : (value > max ? max : value);
-}
-
-template <Decimal T> static constexpr T max_util(const T l, const T r) {
-    return l > r ? l : r;
-}
-
-template <Decimal T> static constexpr T min_util(const T l, const T r) {
-    return l < r ? l : r;
-}
 
 template <Decimal T> constexpr vec2<T> vec2<T>::abs() const {
     return vec2(std::abs(x), std::abs(y));
@@ -213,6 +233,10 @@ template <Decimal T> constexpr T vec2<T>::distance_squared_to(const vec2<T> &to)
     return (x - to.x) * (x - to.x) + (y - to.y) * (y - to.y);
 }
 
+template <Decimal T> constexpr vec2<T> vec2<T>::perpendicular() const {
+    return vec2<T>(-y, x);
+}
+
 template <Decimal T> constexpr void vec2<T>::normalize() {
     if (!std::isfinite(x) && !std::isfinite(y)) {
         x = T{0};
@@ -235,6 +259,26 @@ template <Decimal T> constexpr vec2<T> vec2<T>::normalized() const {
     auto vec = *this;
     vec.normalize();
     return vec;
+}
+
+template <Decimal T> constexpr vec2<T> vec2<T>::reflect(const vec2<T> &line) const {
+    return T{2} * line * dot(line) - *this;
+}
+
+template <Decimal T> constexpr vec2<T> vec2<T>::bounce(const vec2<T> &line) const {
+    return -reflect(line);
+}
+
+template <Decimal T> constexpr vec2<T> vec2<T>::project(const vec2<T> &to) const {
+    return to * (dot(to) / to.length_squared());
+}
+
+template <Decimal T> constexpr bool vec2<T>::is_zero_approx() const {
+    return (abs_util(x) < EPSILON) && (abs_util(y) < EPSILON);
+}
+
+template <Decimal T> constexpr bool vec2<T>::is_equal_approx(const vec2<T> &to) const {
+    return is_equal_approx_util(x, to.x) && is_equal_approx_util(y, to.y);
 }
 
 } // namespace math

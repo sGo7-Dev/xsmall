@@ -1,6 +1,5 @@
 #pragma once
 
-#include "app.h"
 #include "time_info.h"
 
 namespace xsmall {
