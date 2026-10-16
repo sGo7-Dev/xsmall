@@ -1,10 +1,9 @@
-#include <iostream>
-
 #include "app.h"
+#include "math/vec2.h"
 
 #include <spdlog/spdlog.h>
 
-class MyApp : public Application {
+class MyApp : public xsmall::Application {
   public:
     MyApp() {
     }
@@ -13,7 +12,8 @@ class MyApp : public Application {
     }
 
     void start() override {
-        spdlog::info("Hello, World");
+        xsmall::math::vec2 position = xsmall::math::vec2(0.0f, 0.0f);
+        spdlog::info("initialized app");
     }
 
     void update(TimeInfo time) override {

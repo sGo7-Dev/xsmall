@@ -3,6 +3,8 @@
 
 #include <chrono>
 
+using namespace xsmall;
+
 Application::Application() : should_close(false) {
 }
 

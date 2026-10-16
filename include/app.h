@@ -3,6 +3,8 @@
 #include "app.h"
 #include "time_info.h"
 
+namespace xsmall {
+
 class Application {
   private:
     bool should_close = false;
@@ -18,3 +20,5 @@ class Application {
 
     void run();
 };
+
+} // namespace xsmall
