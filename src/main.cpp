@@ -13,8 +13,6 @@ class MyApp : public xsmall::Application {
 
     void start() override {
         xsmall::math::vec2 position = xsmall::math::vec2(0.0f, 0.0f);
-        position += position;
-        position.normalized();
         spdlog::info("initialized app");
     }
 
